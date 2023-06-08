@@ -121,3 +121,11 @@ form > hr {
     margin: 8px auto;
   }
 }
+
+hr{
+  color: #d3d3c9;
+}
+
+/* .submit-container{
+  display: none;
+} */

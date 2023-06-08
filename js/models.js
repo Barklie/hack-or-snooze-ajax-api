@@ -53,6 +53,8 @@ class StoryList {
     //  class directly. Why doesn't it make sense for getStories to be an
     //  instance method?
 
+
+
     // query the /stories endpoint (no auth required)
     const response = await axios({
       url: `${BASE_URL}/stories`,
@@ -73,8 +75,9 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  async addStory( /* user, newStory */) {
-    // UNIMPLEMENTED: complete this function!
+  async addStory(user, title, url){
+    const response = await axios()
+    
   }
 }
 
