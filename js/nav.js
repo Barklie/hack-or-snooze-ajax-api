@@ -10,9 +10,13 @@ function navAllStories(evt) {
   console.debug("navAllStories", evt);
   hidePageComponents();
   putStoriesOnPage();
+  // $('#favorited-stories').toggleClass('hidden')
 }
 
-$body.on("click", "#nav-all", navAllStories);
+$body.on("click", "#nav-all", function(){
+  $('#favorited-stories').addClass('hidden')
+  $('#user-stories').addClass('hidden')
+   navAllStories()});
 
 /** Show login/signup on click on "login" */
 
@@ -33,9 +37,27 @@ function updateNavOnLogin() {
   $navLogin.hide();
   $navLogOut.show();
   $navUserProfile.text(`${currentUser.username}`).show();
+
+  
 }
 
 $('#nav-submit').on('click', function(){
   console.log('click')
   $('#submit-wrap').toggleClass('hidden')
 })
+
+
+$('#submit-form').on('submit', async function(e){
+e.preventDefault();
+await storyList.addStory(currentUser, {
+  "author": `${$('#author').val()}` ,
+  "title": `${$('#title').val()}` ,
+  "url":  `${$('#url').val()}` ,
+})
+
+
+putStoriesOnPage()
+
+})
+
+

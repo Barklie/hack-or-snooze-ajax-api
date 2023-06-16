@@ -12,6 +12,7 @@ class Story {
    *   - {title, author, url, username, storyId, createdAt}
    */
 
+
   constructor({ storyId, title, author, url, username, createdAt }) {
     this.storyId = storyId;
     this.title = title;
@@ -19,13 +20,15 @@ class Story {
     this.url = url;
     this.username = username;
     this.createdAt = createdAt;
+    // this.favorite = false
   }
+
 
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
     // UNIMPLEMENTED: complete this function!
-    return "hostname.com";
+    return this.url;
   }
 }
 
@@ -65,7 +68,9 @@ class StoryList {
     const stories = response.data.stories.map(story => new Story(story));
 
     // build an instance of our own class using the new array of stories
+    // console.log(StoryList)
     return new StoryList(stories);
+
   }
 
   /** Adds story data to API, makes a Story instance, adds it to story list.
@@ -75,11 +80,19 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  async addStory(user, title, url){
-    const response = await axios()
-    
+  async addStory(user, obj){
+    const response = await axios.post(`${BASE_URL}/stories`, 
+    { token: user.loginToken,
+      story: 
+      obj
+    })
+    console.log(response)
+    this.stories.unshift(new Story(response.data.story))
+  
   }
+    
 }
+
 
 
 /******************************************************************************
@@ -196,4 +209,42 @@ class User {
       return null;
     }
   }
+
+  async addFavorite(storyId, state){
+    // console.log(currentUser.username)
+    //not returning anything
+
+    const method = state === "add" ? "POST" : "DELETE";
+    const response = await axios({
+      url:`${BASE_URL}/users/${currentUser.username}/favorites/${storyId}`, 
+      method: method ,
+    data: {token: currentUser.loginToken}
+
+  })
+
+
+  // console.log(currentUser.favorites)
+  console.log(response)
+  let faveList = response.data.user.favorites
+  this.favorites = faveList
+    console.log(currentUser.favorites)
+
+// return this.favorites.some(s => (s.storyId === story.storyId));
+
+  }
+
+  isFavorite(story) {
+    return this.favorites.some(s => (s.storyId === story.storyId));
+  }
+
+  async deleteStory(storyId){
+    const response = await axios({
+      url:`${BASE_URL}/stories/${storyId}`, 
+      method: "DELETE" ,
+    data: {token: currentUser.loginToken}
+
+  })
+
+}
+
 }
