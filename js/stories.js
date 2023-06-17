@@ -1,6 +1,7 @@
 "use strict";
 
 // This is the global list of the stories, an instance of StoryList
+
 let storyList;
 
 /** Get and show stories when site first loads. */
@@ -8,6 +9,7 @@ let storyList;
 async function getAndShowStoriesOnStart() {
   storyList = await StoryList.getStories();
   $storiesLoadingMsg.remove();
+
 
   putStoriesOnPage();
 }
@@ -53,43 +55,83 @@ function generateStoryMarkup(story, binary) {
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
-function putFavoritesOnPage(){
-  hidePageComponents()
-  clearFaves()
-  $('#favorited-stories').removeClass('hidden')
-  for (let favorite of currentUser.favorites) {
-    const $favorite = generateStoryMarkup(favorite);
-    $("#favorited-stories").append($favorite);
-    
-  }
-
-}
-
 function clearFaves(){
   $('#favorited-stories').children().remove()
 
 }
 
-function UserStoriesOnPage(){
+function putFavoritesOnPage(){
   hidePageComponents()
-  clearUserStories()
-  $('#user-stories').removeClass('hidden')
-  for (let story of currentUser.ownStories) {
-    const $story = generateStoryMarkup(story, "true");
-    $("#user-stories").append($story);
-    
+  // $('#favorited-stories').children().remove()
+clearFaves()
+  $('#favorited-stories').removeClass('hidden')
+  for (let favorite of currentUser.favorites) {
+    console.log(favorite)
+    const $favorite = generateStoryMarkup(new Story(favorite));
+    $("#favorited-stories").append($favorite);
   }
 
 }
 
-function clearUserStories(){
+
+
+function UserStoriesOnPage(){
+  hidePageComponents()
+  // clearUserStories()
   $('#user-stories').children().remove()
+  $('#user-stories').removeClass('hidden')
+  for (let story of currentUser.ownStories) {
+    const $story = generateStoryMarkup(new Story(story), "true");
+    $("#user-stories").append($story);
+    
+  }
+  $('.trash').on('click', async function(evt){
+    let e = evt.target
+      console.log('click')
+      // console.log(e.parentElement.id)
+      await currentUser.deleteStory(e.parentElement.id)
+      $('#user-stories').children().remove()
+      for (let story of currentUser.ownStories) {
+        const $story = generateStoryMarkup(story, "true");
+        $("#user-stories").append($story);
+        
+      }
+      
+
+
+  
+    })
+    $('.blank-star').on('click', function(evt){
+      let e = evt.target;
+      console.log('click')
+      // console.log(e.parentElement.id)
+      console.log(e.innerHTML)
+      if(e.innerHTML === "☆"){
+        e.innerHTML = "&starf;"
+        currentUser.addFavorite(e.parentElement.id, "add")
+        console.log(currentUser.favorites)
+        // ★
+      } 
+      else {
+        e.innerHTML = "&star;"
+        console.log(e.innerHTML)
+        currentUser.addFavorite(e.parentElement.id, "remove")
+  
+      }
+    
+    })
 
 }
+
+//function clearUserStories(){
+  // $('#user-stories').children().remove()
+
+//}
 
 function putStoriesOnPage() {
   console.debug("putStoriesOnPage");
 
+  $('#all-stories-list').children().remove()
   $allStoriesList.empty();
   console.log(storyList.stories)
 
@@ -107,9 +149,12 @@ function putStoriesOnPage() {
 
   $allStoriesList.show();
 
+
+
+// function starClick(){
   $('.blank-star').on('click', function(evt){
     let e = evt.target;
-    // console.log('click')
+    console.log('click')
     // console.log(e.parentElement.id)
     console.log(e.innerHTML)
     if(e.innerHTML === "☆"){
@@ -127,27 +172,60 @@ function putStoriesOnPage() {
   
   })
 
-  $('.trash').on('click', function(evt){
-  let e = evt.target
-    console.log('click')
-    console.log(e.parentElement.id)
-    // currentUser.deleteStory(e.parentElement.id)
+//}
 
-  })
+
+
+
 
   $('#nav-favorites').on('click', function(){
     console.log('click')
-    clearUserStories()
+    // clearUserStories()
+
     putFavoritesOnPage();
+    // starClick()
+    $('.blank-star').on('click', function(evt){
+      let e = evt.target;
+      console.log('click')
+      // console.log(e.parentElement.id)
+      console.log(e.innerHTML)
+      if(e.innerHTML === "☆"){
+        e.innerHTML = "&starf;"
+        currentUser.addFavorite(e.parentElement.id, "add")
+        console.log(currentUser.favorites)
+        // ★
+      } 
+      else {
+        e.innerHTML = "&star;"
+        console.log(e.innerHTML)
+        currentUser.addFavorite(e.parentElement.id, "remove")
+  
+      }
+    
+    })
+
+
+  
     // console.log(e)
   })
   $('#nav-userStories').on('click', function(){
     console.log('click')
-    clearFaves()
-    UserStoriesOnPage();
+    // clearFaves()
+    $('#favorited-stories').children().remove()
+    // $('#user-stories').children().remove()
+        UserStoriesOnPage();
+
     // console.log(e)
   })
 
 
+  
+
 
 }
+
+// what happens as soon as the page laods what happens when certain events get triggered.
+//code in this function runs at this time 
+//look at which of the functions run
+
+//

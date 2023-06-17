@@ -8,6 +8,7 @@
 
 function navAllStories(evt) {
   console.debug("navAllStories", evt);
+  $('#all-stories-list').children().remove() 
   hidePageComponents();
   putStoriesOnPage();
   // $('#favorited-stories').toggleClass('hidden')
@@ -16,6 +17,8 @@ function navAllStories(evt) {
 $body.on("click", "#nav-all", function(){
   $('#favorited-stories').addClass('hidden')
   $('#user-stories').addClass('hidden')
+  // $('#all-stories-list').children().remove() 
+  $('#user-stories').children().remove()
    navAllStories()});
 
 /** Show login/signup on click on "login" */

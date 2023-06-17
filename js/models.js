@@ -88,6 +88,7 @@ class StoryList {
     })
     console.log(response)
     this.stories.unshift(new Story(response.data.story))
+
   
   }
     
@@ -244,6 +245,13 @@ class User {
     data: {token: currentUser.loginToken}
 
   })
+  // console.log(response)
+  console.log(this.ownStories)
+  // this.stories = this.stories.filter(story => story.storyId !== storyId);
+
+  currentUser.ownStories = currentUser.ownStories.filter(s => s.storyId !== storyId);
+
+  console.log(this.ownStories)
 
 }
 
